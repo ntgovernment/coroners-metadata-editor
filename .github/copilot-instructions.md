@@ -6,15 +6,16 @@ Inline metadata editor for NT Coroners Court inquest-finding documents, built on
 
 ### Key files
 
-| File | Purpose |
-|------|---------|
-| `src/editor.js` | Core JS — click-to-edit, API calls, DataTables init, column filters |
-| `src/editor.css` | All custom styling — edit affordances, status colours, filter bar |
-| `row-template.html` | Matrix row template (`%keyword%` tokens, one `<tr>` per asset) |
-| `server-functions.html` | Matrix server-side JS (`runat="server"`) — generates `<select>` dropdowns |
-| `vite.config.js` | Vite dev server — HMR for editor.css, vendor bypass for `_files/` |
-| `Document…html` | Static snapshot of the live CMS page (saved via Chrome "Save complete webpage") |
-| `Document…_files/` | Vendor assets saved alongside the snapshot (gitignored) |
+| File                    | Purpose                                                                           |
+| ----------------------- | --------------------------------------------------------------------------------- |
+| `src/editor.js`         | Core JS — click-to-edit, API calls, DataTables init, column filters               |
+| `src/editor.css`        | All custom styling — edit affordances, status colours, filter bar                 |
+| `row-template.html`     | Matrix row template (`%keyword%` tokens, one `<tr>` per asset)                    |
+| `server-functions.html` | Matrix server-side JS (`runat="server"`) — generates `<select>` dropdowns         |
+| `vite.config.js`        | Vite dev server — HMR for editor.css, vendor bypass for `_files/`                 |
+| `Document…html`         | Static snapshot of the live CMS page (saved via Chrome "Save complete webpage")   |
+| `Document…_files/`      | Vendor assets saved alongside the snapshot (gitignored)                           |
+| `.prettierignore`       | Excludes `row-template.html` and `server-functions.html` from Prettier formatting |
 
 ### Development
 
@@ -31,6 +32,69 @@ Vite serves `src/editor.js` and `src/editor.css` with transforms and HMR. All ot
 - **Metadata field IDs** — Each `data-metadataFieldID` attribute maps to a specific Squiz Matrix metadata field. These IDs are CMS-instance-specific and must not be changed without updating the CMS admin.
 - **Date format** — Dates display as `DD/MM/YYYY` but are stored/submitted as `YYYY-MM-DD` (ISO). Conversion helpers: `isoToAustralian()` / `australianToIso()` in `editor.js`.
 - **`_files/metadata-editor-js-api`** — The Squiz Matrix JS API library (extensionless file as served by the CMS). Provides `Squiz_Matrix_API` constructor.
+
+---
+
+## Formatting exclusions
+
+`row-template.html` and `server-functions.html` contain Squiz Matrix `%keyword%` tokens (e.g. `%globals_asset_assetid:1588320^as_asset:asset_data%`). These look like CSS/JS syntax and **will be broken by formatters** that add spaces around `%`, `^`, and `:` characters.
+
+- `.prettierignore` excludes both files from Prettier.
+- `.vscode/settings.json` associates both files as `plaintext` so VS Code's built-in HTML formatter doesn't touch them.
+- **Never run format-on-save or auto-format on these files.** If a formatter has already mangled them, look for spaces injected into `%keyword%` tokens (e.g. `% globals_asset_assetid:1588320 ^ as_asset: asset_data %` should be `%globals_asset_assetid:1588320^as_asset:asset_data%`).
+
+---
+
+## Squiz Matrix server-side patterns
+
+### `row-template.html`
+
+This is pasted into the Matrix Asset Listing's **Row Format**. It uses two types of server-side constructs:
+
+1. **Keyword tokens** — `%asset_metadata_FieldName%` replaced at render time by the CMS.
+2. **`<script runat="server">`** — inline server-side JavaScript executed by Matrix before sending HTML to the browser. Used for dropdown/multi-select fields that need to generate `<select>` elements from metadata field schemas.
+
+#### Text field pattern
+```html
+<td>
+    <div class="edit_area" data-metadataFieldID="{id}" data-label="{name}">
+        %asset_metadata_FieldName%</div>
+</td>
+```
+
+#### Multi-select field pattern (Category)
+```html
+<td class="metadata-editor">
+    <script runat="server">
+        var metadatafield = %globals_asset_assetid:{fieldID}^as_asset:asset_data%;
+        var currentvalue = "%asset_metadata_FieldName%";
+        print(makeMultiSelect(metadatafield, currentvalue, '{label}'));
+        print(`<span class="d-none">${currentvalue}</span>`);
+    </script>
+</td>
+```
+
+**Important:** The `var metadatafield` line sets a closure variable that `makeMultiSelect()` references internally as `metadatafield.assetid`. The `%globals_asset_assetid:{fieldID}^as_asset:asset_data%` keyword fetches the field's schema object (including `select_options`) from the CMS.
+
+### `server-functions.html`
+
+Contains `makeDropdown()` and `makeMultiSelect()` — server-side functions that generate `<select>` HTML from metadata field schemas. Both:
+- Receive the field schema object (`data`) and current value(s)
+- Match current values against option keys and labels (case-insensitive)
+- Return a `<select class="metadata_options">` with `data-metadataFieldID`, `data-current`, and `data-label` attributes
+- `makeMultiSelect()` additionally HTML-entity-escapes labels and stores matched keys as a JSON array in `data-current`
+
+---
+
+## Client-side multi-select flow (editor.js)
+
+When the CMS renders the page, category cells contain `<select multiple class="metadata_options">`. The client-side JS lifecycle:
+
+1. **Init** — `$(".metadata_options").each()` reads `data-current` (JSON array), sets `.val()` on the `<select>`.
+2. **Display overlay** — creates a `<div class="metadata_option_display">` showing selected option labels (newline-joined), hides the real `<select>`.
+3. **Click to edit** — clicking the display div builds a `.multiselect-dropdown` with checkboxes for each option, plus Save/Cancel buttons.
+4. **Save** — collects checked values, joins with `"; "`, calls `submit(value, assetid, fieldid)` which invokes `js_api.setMetadata()`.
+5. **Cancel** — removes the dropdown, restores original display text.
 
 ---
 
@@ -71,42 +135,25 @@ PROD uses a local `all.css` for FontAwesome icons. For local dev, replace it wit
 Find the line:
 
 ```html
-<link
-  rel="stylesheet"
-  href="./Document metadata editor - new _ Attorney-General's Department_files/all.css"
-/>
+<link rel="stylesheet" href="./Document metadata editor - new _ Attorney-General's Department_files/all.css">
 ```
 
 Replace it with:
 
 ```html
-<script
-  src="https://kit.fontawesome.com/9bf658a5c7.js"
-  crossorigin="anonymous"
-></script>
+<script src="https://kit.fontawesome.com/9bf658a5c7.js" crossorigin="anonymous"></script>
 ```
 
 ```bash
 sed -i '/all\.css/c\<script src="https://kit.fontawesome.com/9bf658a5c7.js" crossorigin="anonymous"></script>' Document*html
 ```
 
-### 4. Fix the `editor.js` script tag
+### 4. Fix the `editor.js` and `datatables.lib.js` script tags
 
-Chrome's "Save complete webpage" mangles the `editor.js` `<script>` tag — it changes `src` to `href` and drops the closing `</script>`. The browser then treats subsequent HTML as inline JavaScript, causing `Unexpected token '<'` errors.
-
-Find a line like:
-
-```html
-<script type="text/javascript" href="https://agd.nt.gov.au/__data/assets/git_bridge/0005/1603751/src/editor.js?h=...">
-```
-
-Replace it with:
-
-```html
-<script type="text/javascript" src="./src/editor.js"></script>
-```
+Chrome's "Save complete webpage" mangles git-bridge `<script>` tags — it changes `src` to `href` and drops the closing `</script>`. Fix both:
 
 ```bash
+sed -i 's|<script type="text/javascript" href="https://agd.nt.gov.au[^"]*datatables\.lib\.js[^"]*">|<script type="text/javascript" src="./src/datatables.lib.js"></script>|' Document*html
 sed -i 's|<script type="text/javascript" href="https://agd.nt.gov.au[^"]*editor\.js[^"]*">|<script type="text/javascript" src="./src/editor.js"></script>|' Document*html
 ```
 
@@ -120,4 +167,15 @@ Comment out the **heatmaps.js** script tag (usually on the same line as the jQue
 sed -i 's|<script type="text/javascript" src="\./Document metadata editor - new _ Attorney-General.s Department_files/heatmaps\.js"></script>|<!-- \0 -->|' Document*html
 ```
 
-Comment out the **Monsido config block** and **monsido-script.js** — these span multiple lines (~20 lines starting with `<!-- Mondsido -->`). Wrap the `<script>` block containing `window._monsido` and the `monsido-script.js` `<script>` tag in HTML comments (`<!-- ... -->`).
+Comment out the **Monsido config block** and **monsido-script.js** — these span multiple lines (~20 lines starting with `<!-- Mondsido -->`). **Important:** The block already contains an HTML comment (`<!-- Mondsido -->`). To avoid a nested-comment parse error (Vite/parse5 rejects `<!-- ... <!-- ... --> ... -->`), first strip the inner comment markers, then wrap the entire block:
+
+```bash
+# 1. Remove the inner '<!-- Mondsido -->' comment markers (leave the text)
+sed -i 's|<!-- Mondsido -->|Mondsido|' Document*html
+
+# 2. Wrap from 'Mondsido' through the monsido-script.js </script> tag
+sed -i '/Mondsido/,/monsido-script\.js.*<\/script>/{
+  /Mondsido/s|.*|<!-- \0|
+  /monsido-script\.js.*<\/script>/s|.*|\0 -->|
+}' Document*html
+```

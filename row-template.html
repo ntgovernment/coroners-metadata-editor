@@ -55,11 +55,13 @@
     </td>
 
     <!--@@ Inquest.Category (multi-select) @@-->
-    <td>
-        %begin_asset_metadata_Inquest.Category%
-        <print_var name="makeMultiSelect"
-            args="sq_metadata_field_info:1588320,%asset_metadata_Inquest.Category%,category" />
-        %end_asset_metadata_Inquest.Category%
+    <td class="metadata-editor">
+        <script runat="server">
+            var metadatafield = %globals_asset_assetid:1588320^as_asset:asset_data%;
+            var currentvalue = "%asset_metadata_Inquest.Category%";
+            print(makeMultiSelect(metadatafield, currentvalue, 'category'));
+            print(`<span class="d-none">${currentvalue}</span>`);
+        </script>
     </td>
 
     <!--@@ Year of Findings @@-->
