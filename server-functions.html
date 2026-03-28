@@ -1,0 +1,30 @@
+<!--@@ SERVER SIDE (BEFORE PAGE LOADS) FUNCTIONS @@-->
+<script runat="server">
+
+    function makeDropdown(data, currentvalue) {
+
+        if (!data.hasOwnProperty('attributes')) {
+            return '';
+        }
+
+        // //GENERATE a SELECT DROPDOWN based on metadata options
+        var options = data.attributes.select_options.value;
+        var optionKeys = Object.keys(options);
+        var optionsList = [];
+
+
+        Object.keys(options).forEach(function (key) {
+            var selected = (key === currentvalue) ? "selected" : "";
+            optionsList.push(`<option value="${key}" ${selected} >${options[key]}</option>`);
+        });
+
+        return `
+            <select class="metadata_options" data-metadataFieldID="${metadatafield.assetid}" data-current="${currentvalue}" >
+                <option value=""></option>
+                ${optionsList.join('')}
+            </select>
+        `;
+
+    }
+
+</script>
