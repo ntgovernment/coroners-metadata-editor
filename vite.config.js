@@ -48,7 +48,7 @@ export default defineConfig({
 
   plugins: [
     /**
-     * 1. Inject src/eoi-metadata-editor.css for CSS HMR.
+     * 1. Inject src/editor.css for CSS HMR.
      * 2. Serve _files/ directly (raw bytes, no Vite pipeline) to avoid
      *    PostCSS / import-analysis errors on the pre-built vendor files.
      * 3. Redirect / → the main HTML file.
@@ -60,7 +60,7 @@ export default defineConfig({
       transformIndexHtml(html) {
         return html.replace(
           "</head>",
-          '    <link rel="stylesheet" href="/src/eoi-metadata-editor.css">\n</head>',
+          '    <link rel="stylesheet" href="/src/editor.css">\n</head>',
         );
       },
 
