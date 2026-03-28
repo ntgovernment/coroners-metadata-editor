@@ -13,43 +13,53 @@
 
     <!--@@ Inquest.Into.The.Death.Of @@-->
     <td>
-        <div class="edit_area" data-metadataFieldID="202308">%asset_metadata_Inquest.Into.The.Death.Of%</div>
+        <div class="edit_area" data-metadataFieldID="202308" data-label="death of">
+            %asset_metadata_Inquest.Into.The.Death.Of%</div>
     </td>
 
     <!--@@ Inquest.Link.Text @@-->
     <td>
-        <div class="edit_area" data-metadataFieldID="1588321">%asset_metadata_Inquest.Link.Text%</div>
+        <div class="edit_area" data-metadataFieldID="1588321" data-label="link text">%asset_metadata_Inquest.Link.Text%
+        </div>
     </td>
 
-    <!--@@ Inquest.Link.Text @@-->
+    <!--@@ Inquest.Link.Text.Override @@-->
     <td>
-        <div class="edit_area" data-metadataFieldID="1588322">%asset_metadata_Inquest.Link.Text.Override%</div>
+        <div class="edit_area" data-metadataFieldID="1588322" data-label="override">
+            %asset_metadata_Inquest.Link.Text.Override%</div>
     </td>
 
     <!--@@ Date.Inquest.Commencing @@-->
     <td>
-        <div class="edit_area" data-metadataFieldID="203700">%asset_metadata_Date.Inquest.Commencing^date_format:Y-m-d%
+        <div class="edit_area" data-metadataFieldID="203700" data-label="inquest date" data-datepicker="true">
+            %asset_metadata_Date.Inquest.Commencing^date_format:Y-m-d%
         </div>
     </td>
 
     <!--@@ Date.Of.Findings @@-->
     <td>
-        <div class="edit_area" data-metadataFieldID="202321">%asset_metadata_Date.Of.Findings^date_format:Y-m-d%</div>
+        <div class="edit_area" data-metadataFieldID="202321" data-label="issue date" data-datepicker="true">
+            %asset_metadata_Date.Of.Findings^date_format:Y-m-d%</div>
     </td>
 
     <!--@@ Date.Of.Findings.Text @@-->
     <td>
-        <div class="edit_area" data-metadataFieldID="270998">%asset_metadata_Date.Of.Findings.Text%</div>
+        <div class="edit_area" data-metadataFieldID="270998" data-label="date text">
+            %asset_metadata_Date.Of.Findings.Text%</div>
     </td>
 
     <!--@@ Location.Of.Inquest @@-->
     <td>
-        <div class="edit_area" data-metadataFieldID="202312">%asset_metadata_Location.Of.Inquest%</div>
+        <div class="edit_area" data-metadataFieldID="202312" data-label="location">%asset_metadata_Location.Of.Inquest%
+        </div>
     </td>
 
-    <!--@@ Inquest.Category @@-->
+    <!--@@ Inquest.Category (multi-select) @@-->
     <td>
-        <div class="edit_area" data-metadataFieldID="1588320">%asset_metadata_Inquest.Category%</div>
+        %begin_asset_metadata_Inquest.Category%
+        <print_var name="makeMultiSelect"
+            args="sq_metadata_field_info:1588320,%asset_metadata_Inquest.Category%,category" />
+        %end_asset_metadata_Inquest.Category%
     </td>
 
     <!--@@ Year of Findings @@-->
@@ -60,6 +70,6 @@
     <!--@@ Tags @@-->
 
     <td>
-        <div class="edit_area" data-metadataFieldID="1156510">%asset_metadata_inquestTags%</div>
+        <div class="edit_area" data-metadataFieldID="1156510" data-label="tags">%asset_metadata_inquestTags%</div>
     </td>
 </tr>

@@ -90,6 +90,25 @@ export default defineConfig({
             }
           }
 
+          // Bypass Vite's transform pipeline for vendor libraries in src/
+          if (
+            url.startsWith("/src/") &&
+            url !== "/src/editor.js" &&
+            url !== "/src/editor.css"
+          ) {
+            const absPath = path.join(server.config.root, url);
+            try {
+              if (fs.statSync(absPath).isFile()) {
+                res.setHeader("Content-Type", mimeFor(absPath));
+                res.setHeader("Cache-Control", "no-cache");
+                fs.createReadStream(absPath).pipe(res);
+                return;
+              }
+            } catch {
+              /* fall through */
+            }
+          }
+
           next();
         });
 
