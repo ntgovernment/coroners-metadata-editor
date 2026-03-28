@@ -72,7 +72,7 @@ The Squiz Matrix JS API is initialised with a site-specific key:
 
 ```js
 var apiOptions = new Array();
-apiOptions["key"] = "5070102576";       // Coroners Court site key
+apiOptions["key"] = "5070102576"; // Coroners Court site key
 var js_api = new Squiz_Matrix_API(apiOptions);
 ```
 
@@ -86,36 +86,36 @@ The API library is loaded from `_files/metadata-editor-js-api` (extensionless fi
 
 Each editable cell has a `data-metadataFieldID` attribute mapping to a Squiz Matrix metadata field. These IDs are specific to this CMS instance and **must not be changed** without updating the corresponding fields in the CMS admin.
 
-| Column           | Field ID    | Edit type      | Storage format         | Display format  |
-| ---------------- | ----------- | -------------- | ---------------------- | --------------- |
-| Death of         | `202308`    | Text (inline)  | Plain text             | Plain text      |
-| Link Text        | `1588321`   | Text (inline)  | Plain text             | Plain text      |
-| Override         | `1588322`   | Text (inline)  | Plain text             | Plain text      |
-| Inquest date     | `203700`    | Datepicker     | `YYYY-MM-DD` (ISO)     | `DD/MM/YYYY`    |
-| Issue date       | `202321`    | Datepicker     | `YYYY-MM-DD` (ISO)     | `DD/MM/YYYY`    |
-| Date text        | `270998`    | Text (inline)  | Plain text             | Plain text      |
-| Location         | `202312`    | Text (inline)  | Plain text             | Plain text      |
-| Category         | `1588320`   | Multi-select   | Semicolon-delimited    | Newline-joined   |
-| Tags             | `1156510`   | Text (inline)  | Plain text             | Plain text      |
+| Column       | Field ID  | Edit type     | Storage format      | Display format |
+| ------------ | --------- | ------------- | ------------------- | -------------- |
+| Death of     | `202308`  | Text (inline) | Plain text          | Plain text     |
+| Link Text    | `1588321` | Text (inline) | Plain text          | Plain text     |
+| Override     | `1588322` | Text (inline) | Plain text          | Plain text     |
+| Inquest date | `203700`  | Datepicker    | `YYYY-MM-DD` (ISO)  | `DD/MM/YYYY`   |
+| Issue date   | `202321`  | Datepicker    | `YYYY-MM-DD` (ISO)  | `DD/MM/YYYY`   |
+| Date text    | `270998`  | Text (inline) | Plain text          | Plain text     |
+| Location     | `202312`  | Text (inline) | Plain text          | Plain text     |
+| Category     | `1588320` | Multi-select  | Semicolon-delimited | Newline-joined |
+| Tags         | `1156510` | Text (inline) | Plain text          | Plain text     |
 
 ### DataTables column indices
 
 Used throughout `editor.js` for sorting, filtering, visibility, and render functions.
 
-| Index | Column         | Notes                                              |
-| ----- | -------------- | -------------------------------------------------- |
-| 0     | ID             | Links to CMS admin (`?a={id}/_admin`)              |
-| 1     | Asset name     | Read-only                                          |
-| 2     | Death of       | Editable text                                      |
-| 3     | Link Text      | Editable text                                      |
-| 4     | Override       | Editable text                                      |
-| 5     | Inquest date   | Datepicker; custom render for `DD/MM/YYYY→YYYYMMDD` sort |
-| 6     | Issue date     | Datepicker; default sort column (desc); same render |
-| 7     | Date text      | Editable text                                      |
-| 8     | Location       | Editable text; column filter dropdown              |
-| 9     | Category       | Multi-select; column filter dropdown               |
-| 10    | Year of issue  | Hidden column; column filter dropdown ("All years") |
-| 11    | Tags           | Editable text                                      |
+| Index | Column        | Notes                                                    |
+| ----- | ------------- | -------------------------------------------------------- |
+| 0     | ID            | Links to CMS admin (`?a={id}/_admin`)                    |
+| 1     | Asset name    | Read-only                                                |
+| 2     | Death of      | Editable text                                            |
+| 3     | Link Text     | Editable text                                            |
+| 4     | Override      | Editable text                                            |
+| 5     | Inquest date  | Datepicker; custom render for `DD/MM/YYYY→YYYYMMDD` sort |
+| 6     | Issue date    | Datepicker; default sort column (desc); same render      |
+| 7     | Date text     | Editable text                                            |
+| 8     | Location      | Editable text; column filter dropdown                    |
+| 9     | Category      | Multi-select; column filter dropdown                     |
+| 10    | Year of issue | Hidden column; column filter dropdown ("All years")      |
+| 11    | Tags          | Editable text                                            |
 
 ---
 
@@ -210,10 +210,10 @@ Vite starts on **http://localhost:5173** (auto-increments if port is in use) and
 
 ### What HMR covers
 
-| File changed                                  | Browser behaviour                                               |
-| --------------------------------------------- | --------------------------------------------------------------- |
-| `src/editor.css`                              | CSS hot-replaced (no reload)                                    |
-| `src/editor.js`                               | Full page reload                                                |
+| File changed                                  | Browser behaviour                                                   |
+| --------------------------------------------- | ------------------------------------------------------------------- |
+| `src/editor.css`                              | CSS hot-replaced (no reload)                                        |
+| `src/editor.js`                               | Full page reload                                                    |
 | `row-template.html` / `server-functions.html` | No effect — these are CMS-side; re-save the snapshot to see changes |
 
 ### Known limitations in local dev
@@ -252,15 +252,15 @@ To update the local HTML snapshot after CMS changes:
 
 The editor follows the **NT Government (NTG) design system**:
 
-| Token            | Value       | Usage                            |
-| ---------------- | ----------- | -------------------------------- |
-| Navy             | `#102040`   | Text, active pagination, borders |
-| Green            | `#20a030`   | Hover text colour on editable cells |
-| Focus outline    | `#003d82`   | Keyboard focus ring (2px solid)  |
-| Archive          | `#e6d0c3`   | Row background for archived assets |
-| Under construction | `#d3e8f6` | Row background for draft assets  |
-| Live             | `#e4f1a5`   | Row background for live assets   |
-| Safe editing     | `#f9d4dd`   | Row background for safe-editing assets |
+| Token              | Value     | Usage                                  |
+| ------------------ | --------- | -------------------------------------- |
+| Navy               | `#102040` | Text, active pagination, borders       |
+| Green              | `#20a030` | Hover text colour on editable cells    |
+| Focus outline      | `#003d82` | Keyboard focus ring (2px solid)        |
+| Archive            | `#e6d0c3` | Row background for archived assets     |
+| Under construction | `#d3e8f6` | Row background for draft assets        |
+| Live               | `#e4f1a5` | Row background for live assets         |
+| Safe editing       | `#f9d4dd` | Row background for safe-editing assets |
 
 Font Awesome 5 Pro is used for the edit pencil icon (`\f044`, `fal fa-save` for Save buttons).
 
@@ -292,11 +292,11 @@ Add an entry to the `filterConfigs` array in `editor.js`:
 
 ```js
 var filterConfigs = [
-  { label: "Location",      colIdx: 8,  multiVal: false },
-  { label: "Category",      colIdx: 9,  multiVal: true  },
+  { label: "Location", colIdx: 8, multiVal: false },
+  { label: "Category", colIdx: 9, multiVal: true },
   { label: "Year of issue", colIdx: 10, multiVal: false },
   // Add new filter here:
-  { label: "New Filter",    colIdx: N,  multiVal: false },
+  { label: "New Filter", colIdx: N, multiVal: false },
 ];
 ```
 
@@ -331,9 +331,56 @@ The snapshot (`Document metadata editor … .html` + `_files/`) is a browser-sav
 1. Open the live page in Chrome/Edge.
 2. **File → Save as → Webpage, Complete**.
 3. Replace the existing `.html` and `_files/` in the repo with the newly saved files.
-4. Run the row-trimming step below to keep the dev file fast.
+4. Run the **post-save cleanup** steps below.
+5. Optionally, run the row-trimming step to keep the dev file fast.
 
 > **Note:** The filename contains a Unicode curly apostrophe **U+2019** (`'`), not a plain ASCII apostrophe (`'`). Tools that manipulate the filename by URL must encode it as `%E2%80%99`, not `%27`. Node.js `fs.readdirSync` and shell globs see the raw Unicode character and work normally.
+
+### Post-save cleanup (mandatory after every refresh)
+
+Chrome's "Save complete webpage" introduces several issues. Run these steps in order:
+
+#### 1. Rename `.download` files
+
+Chrome saves JS files with a `.download` suffix. Remove it from all files in `_files/`, overwriting old versions:
+
+```bash
+cd c:/Projects/coroners-metadata-editor
+for f in Document*files/*.download; do base="${f%.download}"; mv "$f" "$base"; done
+```
+
+#### 2. Fix `.download` references in the HTML
+
+```bash
+sed -i 's/\.js\.download/.js/g' Document*html
+grep '\.download' Document*html   # should return nothing
+```
+
+#### 3. Replace FontAwesome with dev kit
+
+PROD uses a local `all.css` for FontAwesome. Replace it with the FA kit script:
+
+```bash
+sed -i '/all\.css/c\<script src="https://kit.fontawesome.com/9bf658a5c7.js" crossorigin="anonymous"></script>' Document*html
+```
+
+#### 4. Fix the `editor.js` script tag
+
+Chrome mangles `<script src="...editor.js">` to `<script href="...">` and drops the closing `</script>`. Fix:
+
+```bash
+sed -i 's|<script type="text/javascript" href="https://agd.nt.gov.au[^"]*editor\.js[^"]*">|<script type="text/javascript" src="./src/editor.js"></script>|' Document*html
+```
+
+#### 5. Comment out Monsido/heatmaps scripts
+
+Monsido analytics requires a production domain token (`Domain token is not defined` error). Comment out:
+
+- The `heatmaps.js` script tag (shares a line with the jQuery tag):
+  ```bash
+  sed -i 's|<script type="text/javascript" src="\./Document metadata editor - new _ Attorney-General.s Department_files/heatmaps\.js"></script>|<!-- \0 -->|' Document*html
+  ```
+- The `window._monsido` config block (~20 lines starting after `<!-- Mondsido -->`) and the `monsido-script.js` script tag — wrap both in `<!-- ... -->` HTML comments.
 
 ### Trimming rows for dev performance
 
