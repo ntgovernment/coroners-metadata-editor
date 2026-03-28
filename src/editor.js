@@ -1,10 +1,18 @@
 (function ($) {
   // Capture jQuery at script-evaluation time before any later script overwrites $.
-  var apiOptions = new Array();
-  apiOptions["key"] = "5070102576";
-  var js_api = new Squiz_Matrix_API(apiOptions);
 
   $(document).ready(function () {
+    var js_api;
+    if (typeof Squiz_Matrix_API === "function") {
+      var apiOptions = new Array();
+      apiOptions["key"] = "5070102576";
+      js_api = new Squiz_Matrix_API(apiOptions);
+    } else {
+      console.warn(
+        "Squiz_Matrix_API not found \u2014 editor UI will render but saves are disabled.",
+      );
+    }
+
     var dtTable;
 
     // ===== Default selections for <select> elements =====
@@ -533,6 +541,13 @@
 
     // ===== API submission =====
     function submit(content, assetID, fieldid) {
+      if (!js_api) {
+        displayResult(
+          "Save unavailable \u2014 Squiz Matrix API not loaded.",
+          "error",
+        );
+        return;
+      }
       js_api.setMetadata({
         asset_id: assetID,
         field_id: fieldid,
