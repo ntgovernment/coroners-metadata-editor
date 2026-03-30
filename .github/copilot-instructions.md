@@ -9,7 +9,7 @@ Inline metadata editor for NT Coroners Court inquest-finding documents, built on
 | File                    | Purpose                                                                           |
 | ----------------------- | --------------------------------------------------------------------------------- |
 | `src/editor.js`         | Core JS — click-to-edit, API calls, DataTables init, column filters               |
-| `src/editor.css`        | All custom styling — edit affordances, status colours, filter bar                 |
+| `src/editor.css`        | All custom styling — edit affordances, status colours, buttons, filter bar        |
 | `row-template.html`     | Matrix row template (`%keyword%` tokens, one `<tr>` per asset)                    |
 | `server-functions.html` | Matrix server-side JS (`runat="server"`) — generates `<select>` dropdowns         |
 | `vite.config.js`        | Vite dev server — HMR for editor.css, vendor bypass for `_files/`                 |
@@ -74,7 +74,7 @@ Referenced throughout `editor.js` for sorting, filtering, visibility, and render
 | 3     | Link Text     | Editable text                                       |
 | 4     | Override      | Editable text                                       |
 | 5     | Inquest date  | Datepicker; custom render for DD/MM/YYYY→YYYYMMDD   |
-| 6     | Issue date    | Datepicker; default sort column (desc); same render  |
+| 6     | Issue date    | Datepicker; default sort column (desc); same render |
 | 7     | Date text     | Editable text                                       |
 | 8     | Location      | Editable text; column filter dropdown               |
 | 9     | Category      | Multi-select; column filter dropdown                |
@@ -93,30 +93,40 @@ This is pasted into the Matrix Asset Listing's **Row Format**. It uses two types
 2. **`<script runat="server">`** — inline server-side JavaScript executed by Matrix before sending HTML to the browser. Used for dropdown/multi-select fields that need to generate `<select>` elements from metadata field schemas.
 
 #### Text field pattern
+
 ```html
 <td>
-    <div class="edit_area" data-metadataFieldID="{id}" data-label="{name}">
-        %asset_metadata_FieldName%</div>
+  <div class="edit_area" data-metadataFieldID="{id}" data-label="{name}">
+    %asset_metadata_FieldName%
+  </div>
 </td>
 ```
 
 #### Date field pattern
+
 ```html
 <td>
-    <div class="edit_area" data-metadataFieldID="{id}" data-label="{name}" data-datepicker="true">
-        %asset_metadata_FieldName^date_format:Y-m-d%</div>
+  <div
+    class="edit_area"
+    data-metadataFieldID="{id}"
+    data-label="{name}"
+    data-datepicker="true"
+  >
+    %asset_metadata_FieldName^date_format:Y-m-d%
+  </div>
 </td>
 ```
 
 #### Multi-select field pattern (Category)
+
 ```html
 <td class="metadata-editor">
-    <script runat="server">
-        var metadatafield = %globals_asset_assetid:{fieldID}^as_asset:asset_data%;
-        var currentvalue = "%asset_metadata_FieldName%";
-        print(makeMultiSelect(metadatafield, currentvalue, '{label}'));
-        print(`<span class="d-none">${currentvalue}</span>`);
-    </script>
+  <script runat="server">
+    var metadatafield = %globals_asset_assetid:{fieldID}^as_asset:asset_data%;
+    var currentvalue = "%asset_metadata_FieldName%";
+    print(makeMultiSelect(metadatafield, currentvalue, '{label}'));
+    print(`<span class="d-none">${currentvalue}</span>`);
+  </script>
 </td>
 ```
 
@@ -125,6 +135,7 @@ This is pasted into the Matrix Asset Listing's **Row Format**. It uses two types
 ### `server-functions.html`
 
 Contains `makeDropdown()` and `makeMultiSelect()` — server-side functions that generate `<select>` HTML from metadata field schemas. Both:
+
 - Receive the field schema object (`data`) and current value(s)
 - Match current values against option keys and labels (case-insensitive)
 - Return a `<select class="metadata_options">` with `data-metadataFieldID`, `data-current`, and `data-label` attributes
@@ -150,27 +161,39 @@ If `Squiz_Matrix_API` was not available at init time, `submit()` shows a "Save u
 
 The file follows this order inside the IIFE + `$(document).ready`:
 
-| Lines (approx) | Section                     | Purpose                                                             |
-| --------------- | --------------------------- | ------------------------------------------------------------------- |
-| 1–3             | IIFE wrapper                | Captures `$` from `jQuery` at evaluation time                       |
-| 4–14            | API init (guarded)          | Creates `Squiz_Matrix_API` if available; logs warning if not        |
-| 18–22           | Default select values       | Reads `data-current`, sets `.val()` on `<select>` elements          |
-| 27–35           | Helpers                     | `getOptionDisplayText()`, `isoToAustralian()`, `australianToIso()`  |
-| 58–76           | Display overlays            | Creates `.metadata_option_display` divs, hides real `<select>`      |
-| 79–101          | Accessibility init          | Adds `tabindex`, `role`, `aria-label` to editable cells             |
-| 111–145         | Focus trap                  | `attachFocusTrap()` / `detachFocusTrap()` for keyboard nav          |
-| 148–240         | Dropdown click handler      | Opens single-select (native `<select>`) or multi-select (checkboxes)|
-| 243–328         | Save/Cancel handlers        | Multi-select and single-select save/cancel event delegation         |
-| 331–356         | Click-outside / Enter key   | Dismisses open dropdowns; Enter opens them                          |
-| 359–428         | Inline click-to-edit        | `makeEditable()` — textarea with Save/Cancel for text fields        |
-| 431–532         | Datepicker                  | Bootstrap Datepicker with DD/MM/YYYY ↔ ISO conversion               |
-| 535–587         | API submission              | `submit()` (guarded), `result()`, `refreshTableCell()`, toast       |
-| 594–658         | DataTables init             | Paging, sorting, column renders, hidden Year column                 |
-| 660–835         | Column filters              | Filter dropdowns, pills, clear button, search integration           |
+| Lines (approx) | Section                   | Purpose                                                              |
+| -------------- | ------------------------- | -------------------------------------------------------------------- |
+| 1–3            | IIFE wrapper              | Captures `$` from `jQuery` at evaluation time                        |
+| 4–14           | API init (guarded)        | Creates `Squiz_Matrix_API` if available; logs warning if not         |
+| 18–22          | Default select values     | Reads `data-current`, sets `.val()` on `<select>` elements           |
+| 27–35          | Helpers                   | `getOptionDisplayText()`, `isoToAustralian()`, `australianToIso()`   |
+| 58–76          | Display overlays          | Creates `.metadata_option_display` divs, hides real `<select>`       |
+| 79–101         | Accessibility init        | Adds `tabindex`, `role`, `aria-label` to editable cells              |
+| 111–145        | Focus trap                | `attachFocusTrap()` / `detachFocusTrap()` for keyboard nav           |
+| 148–240        | Dropdown click handler    | Opens single-select (native `<select>`) or multi-select (checkboxes) |
+| 243–328        | Save/Cancel handlers      | Multi-select and single-select save/cancel event delegation          |
+| 331–356        | Click-outside / Enter key | Dismisses open dropdowns; Enter opens them                           |
+| 359–428        | Inline click-to-edit      | `makeEditable()` — textarea with Save/Cancel for text fields         |
+| 431–532        | Datepicker                | Bootstrap Datepicker with DD/MM/YYYY ↔ ISO conversion                |
+| 535–587        | API submission            | `submit()` (guarded), `result()`, `refreshTableCell()`, toast        |
+| 594–658        | DataTables init           | Paging, sorting, column renders, hidden Year column                  |
+| 660–835        | Column filters            | Filter dropdowns, pills, clear button, search integration            |
 
 ---
 
 ## How to extend
+
+### Button classes
+
+Save and Cancel buttons use Bootstrap `.btn` classes with NTG design system colour overrides defined in `editor.css`. The base classes from the NTG design system (`.ntgc-btn--secondary` / `.ntgc-btn--tertiary`) are **not used** — they were replaced with standard Bootstrap selectors so that styles are fully self-contained in `editor.css` and do not depend on the NTG component library being loaded.
+
+| Button   | Class              | Default                                         | Hover                           |
+| -------- | ------------------ | ----------------------------------------------- | ------------------------------- |
+| Save     | `.btn.btn-secondary` | White bg, `1px solid #1F1F5F` outline, navy text | `#C33826` bg, white text        |
+| Cancel   | `.btn.btn-tertiary`  | Transparent bg, no border, navy text             | Text changes to `#C33826`       |
+| Clear    | `.btn.btn-tertiary`  | Same as Cancel                                   | Same as Cancel                  |
+
+When adding new action buttons, use `.btn.btn-secondary` for primary actions (save, submit) and `.btn.btn-tertiary` for dismissive actions (cancel, clear). Do not add new button variant classes without updating this documentation.
 
 ### Add a new editable text column
 
@@ -187,9 +210,11 @@ The file follows this order inside the IIFE + `$(document).ready`:
 ### Add a new column filter
 
 Add an entry to `filterConfigs` in `editor.js`:
+
 ```js
 { label: "New Filter", colIdx: N, multiVal: false }
 ```
+
 - `multiVal: true` for columns with newline-separated values (partial regex match)
 - `multiVal: false` for exact match
 
@@ -232,13 +257,19 @@ PROD uses a local `all.css` for FontAwesome icons. For local dev, replace it wit
 Find the line:
 
 ```html
-<link rel="stylesheet" href="./Document metadata editor - new _ Attorney-General's Department_files/all.css">
+<link
+  rel="stylesheet"
+  href="./Document metadata editor - new _ Attorney-General's Department_files/all.css"
+/>
 ```
 
 Replace it with:
 
 ```html
-<script src="https://kit.fontawesome.com/9bf658a5c7.js" crossorigin="anonymous"></script>
+<script
+  src="https://kit.fontawesome.com/9bf658a5c7.js"
+  crossorigin="anonymous"
+></script>
 ```
 
 ```bash

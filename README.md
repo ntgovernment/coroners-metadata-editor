@@ -90,7 +90,9 @@ $(document).ready(function () {
     apiOptions["key"] = "5070102576"; // Coroners Court site key
     js_api = new Squiz_Matrix_API(apiOptions);
   } else {
-    console.warn("Squiz_Matrix_API not found — editor UI will render but saves are disabled.");
+    console.warn(
+      "Squiz_Matrix_API not found — editor UI will render but saves are disabled.",
+    );
   }
   // ...
 });
@@ -171,7 +173,7 @@ All custom styling (485 lines). Key sections:
 - **DataTables sort icons** — inline SVG chevrons replacing default DataTables icons
 - **Multi-select dropdown** — checkbox list with sticky Save/Cancel footer
 - **Single select dropdown** — actions row below native `<select>`
-- **NTG button styles** — `.ntgc-btn--secondary` (Save), `.ntgc-btn--tertiary` (Cancel)
+- **Button styles** — `.btn.btn-secondary` (Save), `.btn.btn-tertiary` (Cancel / Clear filters) — NTG design system colours overriding Bootstrap defaults (see [Styling reference](#styling-reference))
 - **Filter bar** — flex layout for search + column filter dropdowns + length control
 - **Filter pills** — rounded removable badges in `.dt-active-filters`
 - **Pagination** — NTG navy blue (#102040) active page, transparent backgrounds
@@ -194,22 +196,25 @@ Squiz Matrix Asset Listing **Row Format**. One `<tr>` per inquest asset. Contain
 2. **`<script runat="server">`** — inline server-side JavaScript executed by Matrix before sending HTML to the browser. Used for dropdown/multi-select fields that need to generate `<select>` elements from metadata field schemas.
 
 **Text field pattern:**
+
 ```html
 <td>
-    <div class="edit_area" data-metadataFieldID="{id}" data-label="{name}">
-        %asset_metadata_FieldName%</div>
+  <div class="edit_area" data-metadataFieldID="{id}" data-label="{name}">
+    %asset_metadata_FieldName%
+  </div>
 </td>
 ```
 
 **Multi-select field pattern (Category):**
+
 ```html
 <td class="metadata-editor">
-    <script runat="server">
-        var metadatafield = %globals_asset_assetid:{fieldID}^as_asset:asset_data%;
-        var currentvalue = "%asset_metadata_FieldName%";
-        print(makeMultiSelect(metadatafield, currentvalue, '{label}'));
-        print(`<span class="d-none">${currentvalue}</span>`);
-    </script>
+  <script runat="server">
+    var metadatafield = %globals_asset_assetid:{fieldID}^as_asset:asset_data%;
+    var currentvalue = "%asset_metadata_FieldName%";
+    print(makeMultiSelect(metadatafield, currentvalue, '{label}'));
+    print(`<span class="d-none">${currentvalue}</span>`);
+  </script>
 </td>
 ```
 
@@ -267,12 +272,12 @@ Vite starts on **http://localhost:5173** (auto-increments if port is in use) and
 
 ### Known limitations in local dev
 
-| Feature                                  | Status                                                                                |
-| ---------------------------------------- | ------------------------------------------------------------------------------------- |
+| Feature                                  | Status                                                                                                                           |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | Click-to-edit / save                     | **Read-only** — `Squiz_Matrix_API` is only available when served from Matrix; UI renders but saves show "Save unavailable" toast |
-| Dropdown / multi-select widgets          | **Not rendered** — `runat="server"` blocks do not execute in a browser                |
-| Status background colours on table cells | Partially visible — `data-status` is present in the snapshot                          |
-| Font Awesome edit icons                  | Visible only if the FA Pro webfont loads (it loads from the snapshot's CDN reference) |
+| Dropdown / multi-select widgets          | **Not rendered** — `runat="server"` blocks do not execute in a browser                                                           |
+| Status background colours on table cells | Partially visible — `data-status` is present in the snapshot                                                                     |
+| Font Awesome edit icons                  | Visible only if the FA Pro webfont loads (it loads from the snapshot's CDN reference)                                            |
 
 Local dev is primarily useful for **CSS, layout, and DataTables work**. JS logic that calls the API must be tested on the live CMS dev environment.
 
@@ -304,6 +309,8 @@ The editor follows the **NT Government (NTG) design system**:
 | Token              | Value     | Usage                                  |
 | ------------------ | --------- | -------------------------------------- |
 | Navy               | `#102040` | Text, active pagination, borders       |
+| NTG Navy           | `#1F1F5F` | Button borders/text, tertiary text     |
+| Action hover       | `#C33826` | Button hover backgrounds, hover text   |
 | Green              | `#20a030` | Hover text colour on editable cells    |
 | Focus outline      | `#003d82` | Keyboard focus ring (2px solid)        |
 | Archive            | `#e6d0c3` | Row background for archived assets     |
@@ -312,6 +319,18 @@ The editor follows the **NT Government (NTG) design system**:
 | Safe editing       | `#f9d4dd` | Row background for safe-editing assets |
 
 Font Awesome 5 Pro is used for the edit pencil icon (`\f044`, `fal fa-save` for Save buttons).
+
+### Button styles
+
+Save and Cancel buttons use Bootstrap `.btn` classes with NTG design system colour overrides defined in `editor.css`. The NTG component library classes (`.ntgc-btn--secondary` / `.ntgc-btn--tertiary`) are **not used** — styles are fully self-contained.
+
+| Button         | Class                | Default state                                    | Hover state                     |
+| -------------- | -------------------- | ------------------------------------------------ | ------------------------------- |
+| Save           | `.btn.btn-secondary` | White bg, `1px solid #1F1F5F` outline, navy text | `#C33826` bg, white text        |
+| Cancel         | `.btn.btn-tertiary`  | Transparent bg, no border, navy text             | Text changes to `#C33826`       |
+| Clear filters  | `.btn.btn-tertiary`  | Same as Cancel                                   | Same as Cancel                  |
+
+Design specs: font `Lato 700 14px/16px`, no border-radius. Use `.btn-secondary` for primary actions (save, submit) and `.btn-tertiary` for dismissive actions (cancel, clear).
 
 ---
 
@@ -328,12 +347,12 @@ Font Awesome 5 Pro is used for the edit pencil icon (`\f044`, `fal fa-save` for 
 1. In `row-template.html`: add a `<td>` with a `<script runat="server">` block:
    ```html
    <td class="metadata-editor">
-       <script runat="server">
-           var metadatafield = %globals_asset_assetid:{fieldID}^as_asset:asset_data%;
-           var currentvalue = "%asset_metadata_FieldName%";
-           print(makeDropdown(metadatafield, currentvalue, '{label}'));
-           print(`<span class="d-none">${currentvalue}</span>`);
-       </script>
+     <script runat="server">
+       var metadatafield = %globals_asset_assetid:{fieldID}^as_asset:asset_data%;
+       var currentvalue = "%asset_metadata_FieldName%";
+       print(makeDropdown(metadatafield, currentvalue, '{label}'));
+       print(`<span class="d-none">${currentvalue}</span>`);
+     </script>
    </td>
    ```
 2. The `makeDropdown()` function in `server-functions.html` generates the `<select>`
@@ -345,12 +364,12 @@ Font Awesome 5 Pro is used for the edit pencil icon (`\f044`, `fal fa-save` for 
 1. In `row-template.html`: add a `<td>` with a `<script runat="server">` block:
    ```html
    <td class="metadata-editor">
-       <script runat="server">
-           var metadatafield = %globals_asset_assetid:{fieldID}^as_asset:asset_data%;
-           var currentvalue = "%asset_metadata_FieldName%";
-           print(makeMultiSelect(metadatafield, currentvalue, '{label}'));
-           print(`<span class="d-none">${currentvalue}</span>`);
-       </script>
+     <script runat="server">
+       var metadatafield = %globals_asset_assetid:{fieldID}^as_asset:asset_data%;
+       var currentvalue = "%asset_metadata_FieldName%";
+       print(makeMultiSelect(metadatafield, currentvalue, '{label}'));
+       print(`<span class="d-none">${currentvalue}</span>`);
+     </script>
    </td>
    ```
 2. Current values are stored semicolon-delimited (`value1;value2;value3`) by the CMS
@@ -453,6 +472,7 @@ Monsido analytics requires a production domain token (`Domain token is not defin
   sed -i 's|<script type="text/javascript" src="\./Document metadata editor - new _ Attorney-General.s Department_files/heatmaps\.js"></script>|<!-- \0 -->|' Document*html
   ```
 - The `window._monsido` config block (~20 lines starting after `<!-- Mondsido -->`) and the `monsido-script.js` script tag. **Important:** The block already contains an HTML comment (`<!-- Mondsido -->`). To avoid a nested-comment parse error (Vite/parse5 rejects `<!-- ... <!-- ... --> ... -->`), first strip the inner comment markers, then wrap the entire block:
+
   ```bash
   # 1. Remove the inner '<!-- Mondsido -->' comment markers (leave the text)
   sed -i 's|<!-- Mondsido -->|Mondsido|' Document*html
@@ -597,10 +617,11 @@ The filename apostrophe must be U+2019. If you re-saved the snapshot and the apo
 Vendor files in `_files/` should be served by the bypass middleware before Vite's pipeline sees them. If new vendor files are added outside `_files/` (or the directory name changes after a re-save), extend the `url.includes('_files/')` check in `vite.config.js`.
 
 **Dropdowns / multi-selects are empty in local dev**
-Expected. They are generated by `runat="server"` blocks that run in Matrix, not in the browser. The Chrome "Save complete webpage" snapshot captures the *rendered* `<select>` elements from PROD, so they appear in local dev only if the snapshot is fresh.
+Expected. They are generated by `runat="server"` blocks that run in Matrix, not in the browser. The Chrome "Save complete webpage" snapshot captures the _rendered_ `<select>` elements from PROD, so they appear in local dev only if the snapshot is fresh.
 
 **Category multi-select showing raw `<select>` on PROD (not styled dropdown)**
 This means `editor.js` did not execute its init code. Common causes:
+
 1. **API library not loaded** — check Network tab for `metadata-editor-js-api` returning 404 or empty. Prior to the guarded init pattern, a missing API library would `ReferenceError` and kill the entire script. The current code guards against this.
 2. **`editor.js` not loaded** — check Network tab for the editor JS file. Chrome "Save complete webpage" mangles git-bridge `<script>` tags (changes `src` to `href`, drops `</script>`). Run post-save cleanup step 4.
 3. **jQuery not available** — the IIFE argument `(jQuery)` throws if jQuery hasn't loaded yet. Check script ordering.

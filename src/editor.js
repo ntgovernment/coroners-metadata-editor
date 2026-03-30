@@ -181,10 +181,10 @@
           $ddSelect.append($opt);
         });
         var $saveBtn = $(
-          '<button type="button" class="ntgc-btn btn-sm ntgc-btn--secondary" data-action="save"><span class="fal fa-save"></span> Save</button>',
+          '<button type="button" class="btn btn-sm btn-secondary" data-action="save"><span class="fal fa-save"></span> Save</button>',
         );
         var $cancelBtn = $(
-          '<button type="button" class="ntgc-btn btn-sm ntgc-btn--tertiary" data-action="cancel">Cancel</button>',
+          '<button type="button" class="btn btn-sm btn-tertiary" data-action="cancel">Cancel</button>',
         );
         var $actions = $('<div class="single-dropdown-actions"></div>').append(
           $saveBtn,
@@ -220,10 +220,10 @@
         $list.append($label);
       });
       var $saveBtn = $(
-        '<button type="button" class="ntgc-btn btn-sm ntgc-btn--secondary" data-action="save"><span class="fal fa-save"></span> Save</button>',
+        '<button type="button" class="btn btn-sm btn-secondary" data-action="save"><span class="fal fa-save"></span> Save</button>',
       );
       var $cancelBtn = $(
-        '<button type="button" class="ntgc-btn btn-sm ntgc-btn--tertiary" data-action="cancel">Cancel</button>',
+        '<button type="button" class="btn btn-sm btn-tertiary" data-action="cancel">Cancel</button>',
       );
       var $actions = $('<div class="metadata_option_actions"></div>').append(
         $saveBtn,
@@ -375,10 +375,10 @@
           savedText,
         );
         var $saveBtn = $(
-          '<button type="button" class="ntgc-btn btn-sm ntgc-btn--secondary" data-action="save"><span class="fal fa-save"></span> Save</button>',
+          '<button type="button" class="btn btn-sm btn-secondary" data-action="save"><span class="fal fa-save"></span> Save</button>',
         );
         var $cancelBtn = $(
-          '<button type="button" class="ntgc-btn btn-sm ntgc-btn--tertiary" data-action="cancel">Cancel</button>',
+          '<button type="button" class="btn btn-sm btn-tertiary" data-action="cancel">Cancel</button>',
         );
         var $actions = $(
           '<div style="margin-top:4px;display:flex;gap:4px;">',
@@ -444,10 +444,10 @@
       $input.val(currentText);
 
       var $saveBtn = $(
-        '<button type="button" class="ntgc-btn btn-sm ntgc-btn--secondary" data-action="save"><span class="fal fa-save"></span> Save</button>',
+        '<button type="button" class="btn btn-sm btn-secondary" data-action="save"><span class="fal fa-save"></span> Save</button>',
       );
       var $cancelBtn = $(
-        '<button type="button" class="ntgc-btn btn-sm ntgc-btn--tertiary" data-action="cancel">Cancel</button>',
+        '<button type="button" class="btn btn-sm btn-tertiary" data-action="cancel">Cancel</button>',
       );
       var $actions = $(
         '<div style="margin-top:4px;display:flex;gap:4px;">',
@@ -711,7 +711,7 @@
     var $activeFiltersRow = $('<div class="dt-active-filters"></div>').hide();
     var $pillsContainer = $('<div class="dt-active-pills"></div>');
     var $clearBtn = $(
-      '<button type="button" class="dt-clear-filters ntgc-btn btn-sm ntgc-btn--tertiary">Clear filters</button>',
+      '<button type="button" class="dt-clear-filters btn btn-sm btn-tertiary">Clear filters</button>',
     );
     $activeFiltersRow.append(
       $('<span class="dt-active-label">Applied filters:</span>'),
