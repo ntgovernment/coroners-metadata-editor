@@ -183,6 +183,35 @@ The file follows this order inside the IIFE + `$(document).ready`:
 
 ## How to extend
 
+### Table header styles
+
+Table headers follow the NTG design system table component spec:
+
+| Property         | Value                               |
+| ---------------- | ----------------------------------- |
+| Background       | `transparent`                       |
+| Border bottom    | `1px solid #D3D3D7`                |
+| Text colour      | `#1F1F5F` (NTG navy)               |
+| Font             | Lato 700, 16px/24px                 |
+| Text align       | Left                                |
+| Padding          | `16px`                              |
+
+### Table row stripes
+
+Even rows (`tr:nth-child(even)`) have background `#F5F5F7`. Odd rows are transparent (default).
+
+### Sort icons
+
+DataTables default sort icons (`::before`) are suppressed. Custom icons are rendered via `::after` pseudo-elements using inline SVG data URIs:
+
+| State      | Class           | Icon                                        |
+| ---------- | --------------- | ------------------------------------------- |
+| Unsorted   | `.sorting`      | Stacked up/down filled triangles, 35% opacity |
+| Ascending  | `.sorting_asc`  | Single filled up-triangle, full opacity     |
+| Descending | `.sorting_desc` | Single filled down-triangle, full opacity   |
+
+Triangle fill colour: `#1F1F5F`. Icon size: 14×14px. Gap between text and icon: 8px.
+
 ### Button classes
 
 Save and Cancel buttons use Bootstrap `.btn` classes with NTG design system colour overrides defined in `editor.css`. The base classes from the NTG design system (`.ntgc-btn--secondary` / `.ntgc-btn--tertiary`) are **not used** — they were replaced with standard Bootstrap selectors so that styles are fully self-contained in `editor.css` and do not depend on the NTG component library being loaded.

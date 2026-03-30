@@ -129,12 +129,22 @@ tr td {
   padding: 10px;
 }
 
+table.dataTable tbody tr:nth-child(even) td {
+  background-color: #f5f5f7;
+}
+
 table.dataTable thead th,
 table.dataTable thead td {
-  padding: 10px 0px;
-  border-bottom: 1px solid #dee2e6;
-  background-color: #dee2e6;
-  text-align: center;
+  padding: 16px;
+  border-bottom: 1px solid #d3d3d7;
+  background-color: transparent;
+  text-align: left;
+  color: #1f1f5f;
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  word-wrap: break-word;
 }
 
 table.dataTable thead th.sorting,
@@ -157,31 +167,28 @@ table.dataTable thead th.sorting_asc::after,
 table.dataTable thead th.sorting_desc::after {
   display: inline-block;
   content: "";
-  width: 10px;
-  height: 12px;
-  margin-left: 5px;
+  width: 14px;
+  height: 14px;
+  margin-left: 8px;
   vertical-align: middle;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
 }
 
-/* Unsorted: stacked chevron-up/chevron-down, muted */
+/* Unsorted: stacked up/down triangles, muted */
 table.dataTable thead th.sorting::after {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20'%3e%3cpath fill='none' stroke='%23102040' stroke-opacity='0.35' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M2 8l6-6 6 6'/%3e%3cpath fill='none' stroke='%23102040' stroke-opacity='0.35' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M2 12l6 6 6-6'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3e%3cpath fill='%231F1F5F' fill-opacity='0.35' d='M3.27 5.15L7 0.5l3.73 4.65H3.27z'/%3e%3cpath fill='%231F1F5F' fill-opacity='0.35' d='M3.27 8.85L7 13.5l3.73-4.65H3.27z'/%3e%3c/svg%3e");
 }
 
-/* Sorted ascending: single chevron-up, full colour, shifted 6px up */
+/* Sorted ascending: single up triangle, full colour */
 table.dataTable thead th.sorting_asc::after {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23102040' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M2 11l6-6 6 6'/%3e%3c/svg%3e");
-  vertical-align: middle;
-  position: relative;
-  top: -6px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 8'%3e%3cpath fill='%231F1F5F' d='M1.17 7.15L7 0.5l5.83 6.65H1.17z'/%3e%3c/svg%3e");
 }
 
-/* Sorted descending: single chevron-down, full colour */
+/* Sorted descending: single down triangle, full colour */
 table.dataTable thead th.sorting_desc::after {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23102040' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 8'%3e%3cpath fill='%231F1F5F' d='M1.17 0.85L7 7.5l5.83-6.65H1.17z'/%3e%3c/svg%3e");
 }
 
 /* Multiselect display div: one item per line */

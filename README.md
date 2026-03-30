@@ -165,12 +165,14 @@ The core application script (~850 lines). Key sections in order:
 
 ### `src/editor.css`
 
-All custom styling (485 lines). Key sections:
+All custom styling (530 lines). Key sections:
 
 - **Toast** (`.results`) — fixed bottom-right notification
 - **Edit affordances** — hover/focus styles with pencil icon (`::before`, Font Awesome `\f044`) and "Edit {label}" tooltip (`::after`)
 - **Status row colours** — `archive` (#e6d0c3), `under-construction` (#d3e8f6), `live` (#e4f1a5), `safe-editing` (#f9d4dd)
-- **DataTables sort icons** — inline SVG chevrons replacing default DataTables icons
+- **Striped rows** — even rows (`tr:nth-child(even)`) get `#F5F5F7` background
+- **Table headers** — transparent background, left-aligned navy text (Lato 700, 16px/24px), subtle `#D3D3D7` bottom border, 16px padding
+- **DataTables sort icons** — inline SVG filled triangles (`#1F1F5F`) replacing default DataTables icons; unsorted shows stacked up/down triangles at 35% opacity, ascending/descending show single filled triangles at full opacity; 14×14px icon size with 8px gap
 - **Multi-select dropdown** — checkbox list with sticky Save/Cancel footer
 - **Single select dropdown** — actions row below native `<select>`
 - **Button styles** — `.btn.btn-secondary` (Save), `.btn.btn-tertiary` (Cancel / Clear filters) — NTG design system colours overriding Bootstrap defaults (see [Styling reference](#styling-reference))
@@ -309,16 +311,47 @@ The editor follows the **NT Government (NTG) design system**:
 | Token              | Value     | Usage                                  |
 | ------------------ | --------- | -------------------------------------- |
 | Navy               | `#102040` | Text, active pagination, borders       |
-| NTG Navy           | `#1F1F5F` | Button borders/text, tertiary text     |
+| NTG Navy           | `#1F1F5F` | Button borders/text, header text, sort icons |
 | Action hover       | `#C33826` | Button hover backgrounds, hover text   |
 | Green              | `#20a030` | Hover text colour on editable cells    |
 | Focus outline      | `#003d82` | Keyboard focus ring (2px solid)        |
+| Subtle border      | `#D3D3D7` | Table header bottom border             |
+| Stripe             | `#F5F5F7` | Even-row background (striped table)    |
 | Archive            | `#e6d0c3` | Row background for archived assets     |
 | Under construction | `#d3e8f6` | Row background for draft assets        |
 | Live               | `#e4f1a5` | Row background for live assets         |
 | Safe editing       | `#f9d4dd` | Row background for safe-editing assets |
 
 Font Awesome 5 Pro is used for the edit pencil icon (`\f044`, `fal fa-save` for Save buttons).
+
+### Table header styles
+
+Table headers follow the NTG design system table component spec:
+
+| Property      | Value                |
+| ------------- | -------------------- |
+| Background    | `transparent`        |
+| Border bottom | `1px solid #D3D3D7`  |
+| Text colour   | `#1F1F5F` (NTG navy) |
+| Font          | Lato 700, 16px/24px  |
+| Text align    | Left                 |
+| Padding       | `16px`               |
+
+### Table row stripes
+
+Even rows (`tr:nth-child(even)`) have background `#F5F5F7`. Odd rows are transparent (default).
+
+### Sort icons
+
+DataTables default sort icons (`::before`) are suppressed. Custom icons are rendered via `::after` pseudo-elements using inline SVG data URIs:
+
+| State      | Class           | Icon                                           |
+| ---------- | --------------- | ---------------------------------------------- |
+| Unsorted   | `.sorting`      | Stacked up/down filled triangles, 35% opacity  |
+| Ascending  | `.sorting_asc`  | Single filled up-triangle, full opacity        |
+| Descending | `.sorting_desc` | Single filled down-triangle, full opacity      |
+
+Triangle fill colour: `#1F1F5F`. Icon size: 14×14px. Gap between text and icon: 8px.
 
 ### Button styles
 
