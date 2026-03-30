@@ -135,10 +135,10 @@ table.dataTable tbody tr:nth-child(even) td {
 
 table.dataTable thead th,
 table.dataTable thead td {
-  padding: 16px;
-  border-bottom: 1px solid #d3d3d7;
-  background-color: transparent;
-  text-align: left;
+  padding: 16px !important;
+  border-bottom: 1px solid #d3d3d7 !important;
+  background-color: white !important;
+  text-align: left !important;
   color: #1f1f5f;
   font-family: "Lato", sans-serif;
   font-size: 16px;
@@ -527,4 +527,203 @@ input[type="checkbox"]:focus-visible {
 .breadcrumb,
 li.breadcrumb {
   background-color: transparent !important;
+}
+
+/* ===== Bootstrap Datepicker — NTG Figma overrides ===== */
+
+/* --- Container & layout --- */
+.datepicker.datepicker-dropdown {
+  background: #fff;
+  box-shadow: 0px 4px 16px rgba(15, 15, 47, 0.15);
+  border: none;
+  border-radius: 0;
+  padding: 8px;
+  font-family: "Lato", sans-serif;
+}
+
+.datepicker-dropdown::before,
+.datepicker-dropdown::after {
+  display: none !important;
+}
+
+/* --- Navigation header (prev / next / month-year switch) --- */
+.datepicker thead th,
+.datepicker thead td {
+  background: #fff;
+}
+
+.datepicker thead tr:first-child th {
+  height: 40px;
+  padding: 4px;
+  font-family: "Lato", sans-serif;
+}
+
+.datepicker .prev,
+.datepicker .next {
+  width: 40px;
+  color: #1f1e27;
+  font-size: 16px;
+  line-height: 24px;
+  border-radius: 0;
+}
+
+.datepicker .prev:hover,
+.datepicker .next:hover {
+  background: #f5f5f7;
+}
+
+.datepicker .datepicker-switch {
+  color: #000;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.datepicker .datepicker-switch:hover {
+  background: #f5f5f7;
+}
+
+/* --- Day-of-week headers (Mo Tu We …) --- */
+.datepicker .dow {
+  color: #666774;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  width: 40px;
+  height: 40px;
+  padding: 4px;
+  text-align: center;
+}
+
+/* --- Day cells --- */
+.datepicker table tr td,
+.datepicker table tr th {
+  width: 40px;
+  height: 40px;
+  border-radius: 0;
+}
+
+.datepicker table tr td.day {
+  color: #1f1e27;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  background: transparent;
+  border-radius: 0;
+  padding: 4px;
+  text-align: center;
+  position: relative;
+}
+
+.datepicker table tr td.day:hover,
+.datepicker table tr td.day.focused {
+  background: #f5f5f7;
+  cursor: pointer;
+}
+
+/* Adjacent-month days (old / new) */
+.datepicker table tr td.old,
+.datepicker table tr td.new {
+  color: #666774;
+}
+
+/* --- Today indicator — red text + dot --- */
+.datepicker table tr td.today,
+.datepicker table tr td.today:hover,
+.datepicker table tr td.today.focused {
+  color: #c33826 !important;
+  font-weight: 700;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.datepicker table tr td.today::after {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: #c33826;
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* --- Active / selected day (matches pagination active page) --- */
+.datepicker table tr td.active,
+.datepicker table tr td.active:hover,
+.datepicker table tr td.active.focused,
+.datepicker table tr td.active:active,
+.datepicker table tr td span.active,
+.datepicker table tr td span.active:hover {
+  background-color: #102040 !important;
+  background-image: none !important;
+  color: #fff !important;
+  border: none;
+  text-shadow: none;
+}
+
+/* Today + Active: keep navy bg, override today's red */
+.datepicker table tr td.today.active,
+.datepicker table tr td.today.active:hover {
+  color: #fff !important;
+  background-color: #102040 !important;
+  background-image: none !important;
+}
+
+.datepicker table tr td.today.active::after {
+  background: #fff;
+}
+
+/* --- Disabled days --- */
+.datepicker table tr td.disabled,
+.datepicker table tr td.disabled:hover {
+  color: #999;
+  background: transparent;
+  cursor: default;
+}
+
+/* --- Today button in footer --- */
+.datepicker tfoot tr th.today {
+  font-family: "Lato", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 16px;
+  color: #1f1f5f;
+  background: #fff;
+  border: 1px solid #1f1f5f;
+  border-radius: 0;
+  padding: 12px 16px;
+}
+
+.datepicker tfoot tr th.today:hover {
+  background: #c33826;
+  border-color: #c33826;
+  color: #fff;
+}
+
+/* --- Month & year picker views --- */
+.datepicker .datepicker-months td,
+.datepicker .datepicker-years td,
+.datepicker .datepicker-decades td,
+.datepicker .datepicker-centuries td {
+  padding: 0;
+}
+
+.datepicker table tr td span {
+  border-radius: 0;
+  color: #1f1e27;
+  font-family: "Lato", sans-serif;
+}
+
+.datepicker table tr td span:hover,
+.datepicker table tr td span.focused {
+  background: #f5f5f7;
+}
+
+.datepicker table tr td span.disabled,
+.datepicker table tr td span.disabled:hover {
+  color: #999;
+  background: transparent;
 }

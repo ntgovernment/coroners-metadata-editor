@@ -33,6 +33,7 @@ Vite serves `src/editor.js` and `src/editor.css` with transforms and HMR. All ot
 - **Metadata field IDs** — Each `data-metadataFieldID` attribute maps to a specific Squiz Matrix metadata field. These IDs are CMS-instance-specific and must not be changed without updating the CMS admin.
 - **Date format** — Dates display as `DD/MM/YYYY` but are stored/submitted as `YYYY-MM-DD` (ISO). Conversion helpers: `isoToAustralian()` / `australianToIso()` in `editor.js`.
 - **`_files/metadata-editor-js-api`** — The Squiz Matrix JS API library (extensionless file as served by the CMS). Provides `Squiz_Matrix_API` constructor.
+- **Dual `editor.css` loading** — The `_files/` directory contains a stale copy of `editor.css` saved from PROD. Vite injects `src/editor.css` via `transformIndexHtml`, but the HTML also links `_files/editor.css`. Both load in the browser with the same selectors. The `_files/` copy has outdated values (e.g. grey header background). Properties that must visually override the stale copy use `!important` in `src/editor.css` — do not remove `!important` from those rules without first eliminating the `_files/editor.css` link from the HTML. See the "CSS specificity and `_files/editor.css`" critical rule below.
 
 ---
 
@@ -45,6 +46,16 @@ Vite serves `src/editor.js` and `src/editor.css` with transforms and HMR. All ot
 - `.prettierignore` excludes both files from Prettier.
 - `.vscode/settings.json` associates both files as `plaintext` so VS Code's built-in HTML formatter doesn't touch them.
 - **Never run format-on-save or auto-format on these files.** If a formatter has already mangled them, look for spaces injected into `%keyword%` tokens (e.g. `% globals_asset_assetid:1588320 ^ as_asset: asset_data %` should be `%globals_asset_assetid:1588320^as_asset:asset_data%`).
+
+### CSS specificity and `_files/editor.css`
+
+The Chrome "Save complete webpage" snapshot saves a copy of `editor.css` into `_files/`. This copy is **stale** — it reflects whatever styles were on PROD at save time. Both `_files/editor.css` (from the HTML `<link>`) and `src/editor.css` (injected by Vite's `transformIndexHtml`) load in the browser with identical selectors. When the stale copy wins the cascade, new styles appear to have no effect.
+
+**Symptoms:** A CSS change in `src/editor.css` doesn't show up in the browser, even though the file is saved and HMR fires.
+
+**Solution:** Properties that conflict with the stale `_files/` copy must use `!important` in `src/editor.css`. Currently this applies to table header styles (`padding`, `border-bottom`, `background-color`, `text-align`). When adding new style overrides for elements that the old PROD CSS also styles with the same selector, check `_files/editor.css` for conflicting rules and add `!important` if needed.
+
+**Long-term:** After a PROD refresh, the `_files/editor.css` will match the current `src/editor.css`, and `!important` can be removed — until the next time styles diverge.
 
 ### Metadata field IDs — do not change
 
@@ -189,12 +200,14 @@ Table headers follow the NTG design system table component spec:
 
 | Property         | Value                               |
 | ---------------- | ----------------------------------- |
-| Background       | `transparent`                       |
+| Background       | `white`                             |
 | Border bottom    | `1px solid #D3D3D7`                |
 | Text colour      | `#1F1F5F` (NTG navy)               |
 | Font             | Lato 700, 16px/24px                 |
 | Text align       | Left                                |
 | Padding          | `16px`                              |
+
+> **Note:** `padding`, `border-bottom`, `background-color`, and `text-align` use `!important` in `src/editor.css` to override the stale `_files/editor.css` copy. See the "CSS specificity" critical rule above.
 
 ### Table row stripes
 

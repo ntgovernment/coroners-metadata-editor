@@ -102,6 +102,16 @@ $(document).ready(function () {
 
 The API library is loaded from `_files/metadata-editor-js-api` (extensionless file served by the CMS).
 
+### Dual `editor.css` loading
+
+The Chrome “Save complete webpage” snapshot saves a copy of `editor.css` into `_files/`. This copy is **stale** — it reflects whatever styles were on PROD at the time of the save.
+
+Both `_files/editor.css` (referenced by the HTML `<link>` tag) and `src/editor.css` (injected by Vite’s `transformIndexHtml`) load in the browser with the same selectors. When the stale copy wins the cascade, new styles appear to have no effect even though the file is saved and HMR fires.
+
+**Solution:** Properties that conflict with the stale `_files/` copy must use `!important` in `src/editor.css`. Currently this applies to table header styles (`padding`, `border-bottom`, `background-color`, `text-align`). When adding new style overrides for elements that the old PROD CSS also styles with the same selector, check `_files/editor.css` for conflicting rules and add `!important` if needed.
+
+**Long-term:** After a PROD refresh, the `_files/editor.css` will match the current `src/editor.css`, and `!important` can be removed — until the next time styles diverge.
+
 ---
 
 ## Data model
@@ -171,7 +181,7 @@ All custom styling (530 lines). Key sections:
 - **Edit affordances** — hover/focus styles with pencil icon (`::before`, Font Awesome `\f044`) and "Edit {label}" tooltip (`::after`)
 - **Status row colours** — `archive` (#e6d0c3), `under-construction` (#d3e8f6), `live` (#e4f1a5), `safe-editing` (#f9d4dd)
 - **Striped rows** — even rows (`tr:nth-child(even)`) get `#F5F5F7` background
-- **Table headers** — transparent background, left-aligned navy text (Lato 700, 16px/24px), subtle `#D3D3D7` bottom border, 16px padding
+- **Table headers** — white background, left-aligned navy text (Lato 700, 16px/24px), subtle `#D3D3D7` bottom border, 16px padding; `padding`, `border-bottom`, `background-color`, and `text-align` use `!important` to override the stale `_files/editor.css` copy (see [Dual `editor.css` loading](#dual-editorcss-loading))
 - **DataTables sort icons** — inline SVG filled triangles (`#1F1F5F`) replacing default DataTables icons; unsorted shows stacked up/down triangles at 35% opacity, ascending/descending show single filled triangles at full opacity; 14×14px icon size with 8px gap
 - **Multi-select dropdown** — checkbox list with sticky Save/Cancel footer
 - **Single select dropdown** — actions row below native `<select>`
@@ -330,12 +340,14 @@ Table headers follow the NTG design system table component spec:
 
 | Property      | Value                |
 | ------------- | -------------------- |
-| Background    | `transparent`        |
+| Background    | `white`              |
 | Border bottom | `1px solid #D3D3D7`  |
 | Text colour   | `#1F1F5F` (NTG navy) |
 | Font          | Lato 700, 16px/24px  |
 | Text align    | Left                 |
 | Padding       | `16px`               |
+
+> **Note:** `padding`, `border-bottom`, `background-color`, and `text-align` use `!important` in `src/editor.css` to override the stale `_files/editor.css` copy. See [Dual `editor.css` loading](#dual-editorcss-loading).
 
 ### Table row stripes
 
@@ -665,6 +677,9 @@ Check `row-template.html` — the Category `<td>` must use `<script runat="serve
 
 **Squiz keywords mangled (spaces around %, ^, :)**
 A formatter ran on `row-template.html` or `server-functions.html`. Fix by removing injected spaces from `%keyword%` tokens. Ensure `.prettierignore` and `.vscode/settings.json` exclude these files.
+
+**CSS changes in `src/editor.css` have no visible effect**
+The `_files/` directory contains a stale copy of `editor.css` from PROD. Both files load with the same selectors. If the stale copy wins the cascade, your changes won’t appear. Add `!important` to the conflicting property in `src/editor.css`. See [Dual `editor.css` loading](#dual-editorcss-loading).
 
 **Port already in use**
 Previous Vite processes may be holding ports. On Windows: `netstat -ano | findstr 5173` then `taskkill /PID <pid> /F`.
