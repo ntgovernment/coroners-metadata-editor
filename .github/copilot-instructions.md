@@ -188,7 +188,7 @@ The file follows this order inside the IIFE + `$(document).ready`:
 | 431–532        | Datepicker                | Bootstrap Datepicker with DD/MM/YYYY ↔ ISO conversion                |
 | 535–587        | API submission            | `submit()` (guarded), `result()`, `refreshTableCell()`, toast        |
 | 594–658        | DataTables init           | Paging, sorting, column renders, hidden Year column                  |
-| 660–835        | Column filters            | Filter dropdowns, pills, clear button, search integration            |
+| 675–949        | Column filters            | Filter dropdowns, pills, clear/copy buttons; `generateFilterURL()`, `copyFilterURL()`, `fallbackCopyURL()`, `applyQueryStringFilters()` |
 
 ---
 
@@ -229,11 +229,12 @@ Triangle fill colour: `#1F1F5F`. Icon size: 14×14px. Gap between text and icon:
 
 Save and Cancel buttons use Bootstrap `.btn` classes with NTG design system colour overrides defined in `editor.css`. The base classes from the NTG design system (`.ntgc-btn--secondary` / `.ntgc-btn--tertiary`) are **not used** — they were replaced with standard Bootstrap selectors so that styles are fully self-contained in `editor.css` and do not depend on the NTG component library being loaded.
 
-| Button | Class                | Default                                          | Hover                     |
-| ------ | -------------------- | ------------------------------------------------ | ------------------------- |
-| Save   | `.btn.btn-secondary` | White bg, `1px solid #1F1F5F` outline, navy text | `#C33826` bg, white text  |
-| Cancel | `.btn.btn-tertiary`  | Transparent bg, no border, navy text             | Text changes to `#C33826` |
-| Clear  | `.btn.btn-tertiary`  | Same as Cancel                                   | Same as Cancel            |
+| Button           | Class                            | Default                                          | Hover / state                                     |
+| ---------------- | -------------------------------- | ------------------------------------------------ | ------------------------------------------------- |
+| Save             | `.btn.btn-secondary`             | White bg, `1px solid #1F1F5F` outline, navy text | `#C33826` bg, white text                          |
+| Cancel           | `.btn.btn-tertiary`              | Transparent bg, no border, navy text             | Text changes to `#C33826`                         |
+| Clear filters    | `.btn.btn-tertiary`              | Same as Cancel                                   | Same as Cancel                                    |
+| Copy filter link | `.btn.btn-tertiary.dt-copy-filter-link` | Same as Cancel                          | `.copied` state sets text to `#1a7a3c` (green)   |
 
 When adding new action buttons, use `.btn.btn-secondary` for primary actions (save, submit) and `.btn.btn-tertiary` for dismissive actions (cancel, clear). Do not add new button variant classes without updating this documentation.
 
@@ -254,11 +255,12 @@ When adding new action buttons, use `.btn.btn-secondary` for primary actions (sa
 Add an entry to `filterConfigs` in `editor.js`:
 
 ```js
-{ label: "New Filter", colIdx: N, multiVal: false }
+{ label: "New Filter", colIdx: N, multiVal: false, urlKey: "newfilter" }
 ```
 
 - `multiVal: true` for columns with newline-separated values (partial regex match)
 - `multiVal: false` for exact match
+- `urlKey` (optional) — the URL query-string key used by `generateFilterURL()` and `applyQueryStringFilters()`. Defaults to `cfg.label` if omitted. Use a short lowercase key when the label contains spaces (e.g. `urlKey: "year"` for "Year of issue").
 
 ---
 
@@ -381,15 +383,3 @@ These prompts define repeatable workflows for common development tasks. Use them
 3. Write a conventional-commit message summarising the session's changes (use `feat:`, `fix:`, `style:`, `docs:`, or `refactor:` prefix as appropriate).
 4. Commit: `git commit -m "<message>"`
 5. Push: `git push origin dev`
-
-### Update docs and deploy to dev
-
-> Add these prompts to the copilot instructions and perform these tasks:
-> Update docs: Update comprehensive documentation and copilot instructions to become helpful to other developers and coding agents.
-> Deploy to dev: Run `git add .`, generate a summary of changes done during this chat session and use that summary to commit the changes to dev, then run `git push origin dev`.
-
-**What this means in practice:**
-
-1. Follow the **Update docs** workflow above to bring documentation in sync with the current implementation.
-2. Add any new workflow prompts introduced during the session to the `## Standard workflow prompts` section of this file.
-3. Follow the **Deploy to dev** workflow above to stage, commit, and push all changes.

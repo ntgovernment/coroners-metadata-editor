@@ -171,7 +171,7 @@ The core application script (~850 lines). Key sections in order:
 10. **API submission** — `submit()` calls `js_api.setMetadata()` (guarded — shows error toast if API not loaded); `result()` updates DOM via `refreshTableCell()` + DataTables row invalidation
 11. **Toast** — `displayResult()` shows a fixed-position alert for 3 seconds
 12. **DataTables init** — pagination (10/page), sorting, column render functions for date columns, hidden Year column
-13. **Column filters** — dropdown filters for Location (col 8), Category (col 9), Year of issue (col 10); filter pills with remove buttons; "Clear filters" button
+13. **Column filters** — dropdown filters for Location (col 8), Category (col 9), Year of issue (col 10); filter pills with remove buttons; "Clear filters" and "Copy filter link" buttons; `generateFilterURL()` builds a shareable URL from active filter state (`?search=…&Location=…&year=…`); `copyFilterURL()` writes it to the clipboard (Clipboard API with `execCommand` fallback); `applyQueryStringFilters()` restores filter state from URL params on page load
 
 ### `src/editor.css`
 
@@ -187,7 +187,7 @@ All custom styling (530 lines). Key sections:
 - **Single select dropdown** — actions row below native `<select>`
 - **Button styles** — `.btn.btn-secondary` (Save), `.btn.btn-tertiary` (Cancel / Clear filters) — NTG design system colours overriding Bootstrap defaults (see [Styling reference](#styling-reference))
 - **Filter bar** — flex layout for search + column filter dropdowns + length control
-- **Filter pills** — rounded removable badges in `.dt-active-filters`
+- **Filter pills** — square removable badges in `.dt-active-filters`; `border-radius: 0`; "Copy filter link" button (`.dt-copy-filter-link`) with `.copied` state that sets text colour to `#1a7a3c` (green) for 2 seconds after a successful copy
 - **Pagination** — NTG navy blue (#102040) active page, transparent backgrounds
 - **Breadcrumb fix** — removes Bootstrap background
 

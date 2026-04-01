@@ -425,7 +425,7 @@ input[type="checkbox"]:focus-visible {
   border: 1px solid #102040;
   font-size: 0.8em;
   padding: 0.2em 0.6em 0.2em 0.75em;
-  border-radius: 9999px;
+  border-radius: 0;
   white-space: nowrap;
 }
 
@@ -441,6 +441,15 @@ input[type="checkbox"]:focus-visible {
 
 .dt-pill-remove:hover {
   color: #102040;
+}
+
+.dt-copy-filter-link::before,
+.dt-copy-filter-link:hover::before {
+  display: none;
+}
+
+.dt-copy-filter-link.copied {
+  color: #1a7a3c;
 }
 
 .dt-clear-filters::before,

@@ -704,7 +704,7 @@
     var filterConfigs = [
       { label: "Location", colIdx: 8, multiVal: false },
       { label: "Category", colIdx: 9, multiVal: true },
-      { label: "Year of issue", colIdx: 10, multiVal: false },
+      { label: "Year of issue", colIdx: 10, multiVal: false, urlKey: "year" },
     ];
 
     var $filterBar = $('<div class="dt-filter-bar"></div>');
@@ -713,10 +713,14 @@
     var $clearBtn = $(
       '<button type="button" class="dt-clear-filters btn btn-sm btn-tertiary">Clear filters</button>',
     );
+    var $copyBtn = $(
+      '<button type="button" class="dt-copy-filter-link btn btn-sm btn-tertiary">Copy filter link</button>',
+    );
     $activeFiltersRow.append(
       $('<span class="dt-active-label">Applied filters:</span>'),
       $pillsContainer,
       $clearBtn,
+      $copyBtn,
     );
 
     var filterSelects = {};
@@ -787,6 +791,64 @@
       }
     }
 
+    function generateFilterURL() {
+      var base = window.location.origin + window.location.pathname;
+      var params = new URLSearchParams();
+      var searchTerm = dtTable.search();
+      if (searchTerm !== "") {
+        params.append("search", searchTerm);
+      }
+      filterConfigs.forEach(function (cfg) {
+        var val = filterSelects[cfg.colIdx].val();
+        if (val !== "") {
+          params.append(cfg.urlKey || cfg.label, val);
+        }
+      });
+      var qs = params.toString();
+      return qs ? base + "?" + qs : base;
+    }
+
+    function fallbackCopyURL(url) {
+      var $ta = $("<textarea></textarea>")
+        .val(url)
+        .css({ position: "fixed", left: "-9999px", top: "-9999px" });
+      $("body").append($ta);
+      $ta[0].focus();
+      $ta[0].select();
+      try {
+        document.execCommand("copy");
+      } catch (e) {
+        /* silent */
+      }
+      $ta.remove();
+    }
+
+    function copyFilterURL($btn) {
+      var url = generateFilterURL();
+      function onSuccess() {
+        $btn.text("Copied!").addClass("copied");
+        setTimeout(function () {
+          $btn.text("Copy filter link").removeClass("copied");
+        }, 2000);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(url)
+          .then(onSuccess)
+          .catch(function () {
+            fallbackCopyURL(url);
+            onSuccess();
+          });
+      } else {
+        fallbackCopyURL(url);
+        onSuccess();
+      }
+    }
+
+    $copyBtn.on("click", function () {
+      copyFilterURL($copyBtn);
+    });
+
     $clearBtn.on("click", function () {
       dtTable.search("");
       $(dtTable.table().container()).find(".dataTables_filter input").val("");
@@ -844,6 +906,40 @@
     dtTable.on("search.dt", function () {
       updateActiveFilters();
     });
+
+    function applyQueryStringFilters() {
+      var params = new URLSearchParams(window.location.search);
+      var anyApplied = false;
+
+      var searchVal = params.get("search");
+      if (searchVal) {
+        dtTable.search(searchVal);
+        $(dtTable.table().container())
+          .find(".dataTables_filter input")
+          .val(searchVal);
+        anyApplied = true;
+      }
+
+      filterConfigs.forEach(function (cfg) {
+        var key = cfg.urlKey || cfg.label;
+        var val = params.get(key);
+        if (!val) return;
+        var $sel = filterSelects[cfg.colIdx];
+        // Only apply if the value exists as an option
+        if ($sel.find('option[value="' + $.escapeSelector(val) + '"]').length) {
+          $sel.val(val);
+          applyColumnFilter(cfg, val);
+          anyApplied = true;
+        }
+      });
+
+      if (anyApplied) {
+        dtTable.draw();
+        updateActiveFilters();
+      }
+    }
+
+    applyQueryStringFilters();
 
     var $tableNode = $(dtTable.table().node());
     var $wrapperNode = $tableNode.closest(".dataTables_wrapper");
