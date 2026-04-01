@@ -381,3 +381,15 @@ These prompts define repeatable workflows for common development tasks. Use them
 3. Write a conventional-commit message summarising the session's changes (use `feat:`, `fix:`, `style:`, `docs:`, or `refactor:` prefix as appropriate).
 4. Commit: `git commit -m "<message>"`
 5. Push: `git push origin dev`
+
+### Update docs and deploy to dev
+
+> Add these prompts to the copilot instructions and perform these tasks:
+> Update docs: Update comprehensive documentation and copilot instructions to become helpful to other developers and coding agents.
+> Deploy to dev: Run `git add .`, generate a summary of changes done during this chat session and use that summary to commit the changes to dev, then run `git push origin dev`.
+
+**What this means in practice:**
+
+1. Follow the **Update docs** workflow above to bring documentation in sync with the current implementation.
+2. Add any new workflow prompts introduced during the session to the `## Standard workflow prompts` section of this file.
+3. Follow the **Deploy to dev** workflow above to stage, commit, and push all changes.
