@@ -318,19 +318,19 @@ To update the local HTML snapshot after CMS changes:
 
 The editor follows the **NT Government (NTG) design system**:
 
-| Token              | Value     | Usage                                  |
-| ------------------ | --------- | -------------------------------------- |
-| Navy               | `#102040` | Text, active pagination, borders       |
+| Token              | Value     | Usage                                        |
+| ------------------ | --------- | -------------------------------------------- |
+| Navy               | `#102040` | Text, active pagination, borders             |
 | NTG Navy           | `#1F1F5F` | Button borders/text, header text, sort icons |
-| Action hover       | `#C33826` | Button hover backgrounds, hover text   |
-| Green              | `#20a030` | Hover text colour on editable cells    |
-| Focus outline      | `#003d82` | Keyboard focus ring (2px solid)        |
-| Subtle border      | `#D3D3D7` | Table header bottom border             |
-| Stripe             | `#F5F5F7` | Even-row background (striped table)    |
-| Archive            | `#e6d0c3` | Row background for archived assets     |
-| Under construction | `#d3e8f6` | Row background for draft assets        |
-| Live               | `#e4f1a5` | Row background for live assets         |
-| Safe editing       | `#f9d4dd` | Row background for safe-editing assets |
+| Action hover       | `#C33826` | Button hover backgrounds, hover text         |
+| Green              | `#20a030` | Hover text colour on editable cells          |
+| Focus outline      | `#003d82` | Keyboard focus ring (2px solid)              |
+| Subtle border      | `#D3D3D7` | Table header bottom border                   |
+| Stripe             | `#F5F5F7` | Even-row background (striped table)          |
+| Archive            | `#e6d0c3` | Row background for archived assets           |
+| Under construction | `#d3e8f6` | Row background for draft assets              |
+| Live               | `#e4f1a5` | Row background for live assets               |
+| Safe editing       | `#f9d4dd` | Row background for safe-editing assets       |
 
 Font Awesome 5 Pro is used for the edit pencil icon (`\f044`, `fal fa-save` for Save buttons).
 
@@ -357,11 +357,11 @@ Even rows (`tr:nth-child(even)`) have background `#F5F5F7`. Odd rows are transpa
 
 DataTables default sort icons (`::before`) are suppressed. Custom icons are rendered via `::after` pseudo-elements using inline SVG data URIs:
 
-| State      | Class           | Icon                                           |
-| ---------- | --------------- | ---------------------------------------------- |
-| Unsorted   | `.sorting`      | Stacked up/down filled triangles, 35% opacity  |
-| Ascending  | `.sorting_asc`  | Single filled up-triangle, full opacity        |
-| Descending | `.sorting_desc` | Single filled down-triangle, full opacity      |
+| State      | Class           | Icon                                          |
+| ---------- | --------------- | --------------------------------------------- |
+| Unsorted   | `.sorting`      | Stacked up/down filled triangles, 35% opacity |
+| Ascending  | `.sorting_asc`  | Single filled up-triangle, full opacity       |
+| Descending | `.sorting_desc` | Single filled down-triangle, full opacity     |
 
 Triangle fill colour: `#1F1F5F`. Icon size: 14×14px. Gap between text and icon: 8px.
 
@@ -369,11 +369,11 @@ Triangle fill colour: `#1F1F5F`. Icon size: 14×14px. Gap between text and icon:
 
 Save and Cancel buttons use Bootstrap `.btn` classes with NTG design system colour overrides defined in `editor.css`. The NTG component library classes (`.ntgc-btn--secondary` / `.ntgc-btn--tertiary`) are **not used** — styles are fully self-contained.
 
-| Button         | Class                | Default state                                    | Hover state                     |
-| -------------- | -------------------- | ------------------------------------------------ | ------------------------------- |
-| Save           | `.btn.btn-secondary` | White bg, `1px solid #1F1F5F` outline, navy text | `#C33826` bg, white text        |
-| Cancel         | `.btn.btn-tertiary`  | Transparent bg, no border, navy text             | Text changes to `#C33826`       |
-| Clear filters  | `.btn.btn-tertiary`  | Same as Cancel                                   | Same as Cancel                  |
+| Button        | Class                | Default state                                    | Hover state               |
+| ------------- | -------------------- | ------------------------------------------------ | ------------------------- |
+| Save          | `.btn.btn-secondary` | White bg, `1px solid #1F1F5F` outline, navy text | `#C33826` bg, white text  |
+| Cancel        | `.btn.btn-tertiary`  | Transparent bg, no border, navy text             | Text changes to `#C33826` |
+| Clear filters | `.btn.btn-tertiary`  | Same as Cancel                                   | Same as Cancel            |
 
 Design specs: font `Lato 700 14px/16px`, no border-radius. Use `.btn-secondary` for primary actions (save, submit) and `.btn-tertiary` for dismissive actions (cancel, clear).
 

@@ -198,14 +198,14 @@ The file follows this order inside the IIFE + `$(document).ready`:
 
 Table headers follow the NTG design system table component spec:
 
-| Property         | Value                               |
-| ---------------- | ----------------------------------- |
-| Background       | `white`                             |
-| Border bottom    | `1px solid #D3D3D7`                |
-| Text colour      | `#1F1F5F` (NTG navy)               |
-| Font             | Lato 700, 16px/24px                 |
-| Text align       | Left                                |
-| Padding          | `16px`                              |
+| Property      | Value                |
+| ------------- | -------------------- |
+| Background    | `white`              |
+| Border bottom | `1px solid #D3D3D7`  |
+| Text colour   | `#1F1F5F` (NTG navy) |
+| Font          | Lato 700, 16px/24px  |
+| Text align    | Left                 |
+| Padding       | `16px`               |
 
 > **Note:** `padding`, `border-bottom`, `background-color`, and `text-align` use `!important` in `src/editor.css` to override the stale `_files/editor.css` copy. See the "CSS specificity" critical rule above.
 
@@ -217,11 +217,11 @@ Even rows (`tr:nth-child(even)`) have background `#F5F5F7`. Odd rows are transpa
 
 DataTables default sort icons (`::before`) are suppressed. Custom icons are rendered via `::after` pseudo-elements using inline SVG data URIs:
 
-| State      | Class           | Icon                                        |
-| ---------- | --------------- | ------------------------------------------- |
+| State      | Class           | Icon                                          |
+| ---------- | --------------- | --------------------------------------------- |
 | Unsorted   | `.sorting`      | Stacked up/down filled triangles, 35% opacity |
-| Ascending  | `.sorting_asc`  | Single filled up-triangle, full opacity     |
-| Descending | `.sorting_desc` | Single filled down-triangle, full opacity   |
+| Ascending  | `.sorting_asc`  | Single filled up-triangle, full opacity       |
+| Descending | `.sorting_desc` | Single filled down-triangle, full opacity     |
 
 Triangle fill colour: `#1F1F5F`. Icon size: 14×14px. Gap between text and icon: 8px.
 
@@ -229,11 +229,11 @@ Triangle fill colour: `#1F1F5F`. Icon size: 14×14px. Gap between text and icon:
 
 Save and Cancel buttons use Bootstrap `.btn` classes with NTG design system colour overrides defined in `editor.css`. The base classes from the NTG design system (`.ntgc-btn--secondary` / `.ntgc-btn--tertiary`) are **not used** — they were replaced with standard Bootstrap selectors so that styles are fully self-contained in `editor.css` and do not depend on the NTG component library being loaded.
 
-| Button   | Class              | Default                                         | Hover                           |
-| -------- | ------------------ | ----------------------------------------------- | ------------------------------- |
-| Save     | `.btn.btn-secondary` | White bg, `1px solid #1F1F5F` outline, navy text | `#C33826` bg, white text        |
-| Cancel   | `.btn.btn-tertiary`  | Transparent bg, no border, navy text             | Text changes to `#C33826`       |
-| Clear    | `.btn.btn-tertiary`  | Same as Cancel                                   | Same as Cancel                  |
+| Button | Class                | Default                                          | Hover                     |
+| ------ | -------------------- | ------------------------------------------------ | ------------------------- |
+| Save   | `.btn.btn-secondary` | White bg, `1px solid #1F1F5F` outline, navy text | `#C33826` bg, white text  |
+| Cancel | `.btn.btn-tertiary`  | Transparent bg, no border, navy text             | Text changes to `#C33826` |
+| Clear  | `.btn.btn-tertiary`  | Same as Cancel                                   | Same as Cancel            |
 
 When adding new action buttons, use `.btn.btn-secondary` for primary actions (save, submit) and `.btn.btn-tertiary` for dismissive actions (cancel, clear). Do not add new button variant classes without updating this documentation.
 
@@ -349,3 +349,35 @@ sed -i '/Mondsido/,/monsido-script\.js.*<\/script>/{
   /monsido-script\.js.*<\/script>/s|.*|\0 -->|
 }' Document*html
 ```
+
+---
+
+## Standard workflow prompts
+
+These prompts define repeatable workflows for common development tasks. Use them verbatim or adapt them as instructions to Copilot or coding agents.
+
+### Update docs
+
+> Update comprehensive documentation and copilot instructions to become helpful to other developers and coding agents.
+
+**What this means in practice:**
+
+- Review `src/editor.js` for any new sections, helpers, or patterns not yet reflected in the `editor.js` section map.
+- Review `src/editor.css` for new design tokens, component classes, or `!important` overrides not yet documented.
+- Update the column index table if columns were added, removed, or reordered.
+- Update the metadata field ID table if new fields were added.
+- Update the "How to extend" section if new extension patterns were introduced.
+- Ensure architecture notes in this file and `README.md` accurately reflect the current implementation.
+- Check that all critical rules are still current and accurately described.
+
+### Deploy to dev
+
+> Run `git add .`, generate a summary of changes done during this chat session and use that summary to commit the changes to dev, then run `git push origin dev`.
+
+**What this means in practice:**
+
+1. Stage all changes: `git add .`
+2. Review `git diff --stat HEAD` and `git diff HEAD` to identify what has changed.
+3. Write a conventional-commit message summarising the session's changes (use `feat:`, `fix:`, `style:`, `docs:`, or `refactor:` prefix as appropriate).
+4. Commit: `git commit -m "<message>"`
+5. Push: `git push origin dev`
